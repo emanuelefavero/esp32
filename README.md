@@ -18,7 +18,7 @@ This is a simple repository to store code for the ESP32 micro controller
 
 ## ESP32 DevKitC V2 Pin Map
 
-<img src="./reference/esp32-dev-kit-c-v2-pin-map.png" alt="GPIO Pin Map" width="600">
+<img src="./reference/esp32-dev-kit-c-v2-pin-map.png" alt="GPIO Pin Map" width="900">
 
 ## License
 
