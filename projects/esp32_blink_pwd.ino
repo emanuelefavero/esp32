@@ -1,3 +1,7 @@
+/*
+Blink an LED on pin 2 of the ESP32 using PWM
+*/
+
 #define LEDC_TIMER_13_BIT 13
 #define LEDC_BASE_FREQ 5000
 

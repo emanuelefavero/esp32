@@ -1,5 +1,7 @@
 /*
-This project controls a cathode RGB led with a switch and PWD
+Blink a Cathode RGB LED on pins 2, 4, and 5 of the ESP32 using PWM and a switch on pin 15
+
+TIP: Connect the other part of the switch to the GND pin of the ESP32
 */
 
 #define LEDC_TIMER_13_BIT 13

@@ -1,3 +1,7 @@
+/*
+Blink a Cathode RGB LED on pins 2, 4, and 5 of the ESP32 using PWM
+*/
+
 #define LEDC_TIMER_13_BIT 13
 #define LEDC_BASE_FREQ 5000
 
