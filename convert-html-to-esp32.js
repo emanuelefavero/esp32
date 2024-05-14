@@ -14,8 +14,16 @@ const rl = readline.createInterface({
 
 // Read the file line by line
 rl.on('line', (line) => {
-  // Escape double quotes in the line
-  const escapedLine = line.replace(/"/g, '\\"')
+  // Trim the line to remove whitespace from the beginning and end
+  const trimmedLine = line.trim()
+
+  // Skip processing if the line is blank
+  if (trimmedLine === '') {
+    return
+  }
+
+  // Escape double quotes in the trimmed line
+  const escapedLine = trimmedLine.replace(/"/g, '\\"')
 
   // Output the escaped line in a format suitable for C++
   console.log(`client.println("${escapedLine}");`)
