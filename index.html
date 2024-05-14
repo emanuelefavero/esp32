@@ -3,9 +3,116 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>ESP32 Web Server</title>
+
+    <style>
+      :root {
+        --foreground: #020617;
+        --background: #f8fafc;
+        --primary: #8b5cf6;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --foreground: #f8fafc;
+          --background: #020617;
+        }
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        margin-top: 4rem;
+        font-family: -apple-system, system-ui, BlinkMacSystemFont, 'SF Pro',
+          'San Francisco Pro', 'Helvetica Neue', Helvetica, Roboto, sans-serif;
+        color: var(--foreground);
+        background-color: var(--background);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      section {
+        padding-top: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      a {
+        min-width: 4rem;
+        text-decoration: none;
+        text-align: center;
+        padding: 0.5rem 1rem;
+        margin: 0.5rem;
+        border: none;
+        border-radius: 0.25rem;
+        background-color: var(--primary);
+        color: #fff;
+        font-size: 1rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background-color 0.2s, transform 0.2s;
+      }
+
+      a.red {
+        background-color: #f43f5e;
+      }
+
+      a.red:hover {
+        background-color: #e11d48;
+      }
+
+      a.green {
+        background-color: #22c55e;
+      }
+
+      a.green:hover {
+        background-color: #16a34a;
+      }
+
+      a.blue {
+        background-color: #3b82f6;
+      }
+
+      a.blue:hover {
+        background-color: #2563eb;
+      }
+
+      a:active {
+        transform: scale(0.95);
+      }
+
+      a.red.off,
+      a.green.off,
+      a.blue.off {
+        background-color: #64748b;
+      }
+
+      a.red.off:hover,
+      a.green.off:hover,
+      a.blue.off:hover {
+        background-color: #475569;
+      }
+    </style>
   </head>
   <body>
-    <h1>Hello</h1>
+    <h1>ESP32 Web Server</h1>
+
+    <section>
+      <a class="red" role="button" aria-label="Turn on Red Led" href="#">ON</a>
+      <a class="green" role="button" aria-label="Turn on Green Led" href="#"
+        >ON</a
+      >
+      <a class="blue" role="button" aria-label="Turn on Blue Led" href="#"
+        >ON</a
+      >
+    </section>
   </body>
 </html>
