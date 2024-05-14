@@ -4,6 +4,7 @@ Web Server - Control RGB Led on GPIO pins 2, 4, 5 from a web server by typing th
 // TIP: Make sure to add your ssid and password credentials of your local network.
 // TIP: After uploading the code to the ESP32 go to the Serial Monitor in the Arduino IDE to check the ESP32 IP address.
 Then, go the IP address in your browser search bar
+// TIP: The IP address will be displayed in the Serial Monitor also when the ESP32 connects to the Arduino IDE or when the ESP32 connects to Wi-Fi
 */
 
 // Load Wi-Fi library
@@ -136,139 +137,145 @@ void loop() {
             client.println("    <meta charset=\"UTF-8\" />");
             client.println("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />");
             client.println("    <title>ESP32 Web Server</title>"); // head title
-            client.println("");
 
             // CSS
-            client.println("    <style>");
-            client.println("      :root {");
-            client.println("        --foreground: #020617;");
-            client.println("        --background: #f8fafc;");
-            client.println("        --primary: #8b5cf6;");
-            client.println("      }");
-            client.println("");
-            client.println("      @media (prefers-color-scheme: dark) {");
-            client.println("        :root {");
-            client.println("          --foreground: #f8fafc;");
-            client.println("          --background: #020617;");
-            client.println("        }");
-            client.println("      }");
-            client.println("");
-            client.println("      * {");
-            client.println("        margin: 0;");
-            client.println("        padding: 0;");
-            client.println("        box-sizing: border-box;");
-            client.println("      }");
-            client.println("");
-            client.println("      body {");
-            client.println("        margin-top: 4rem;");
-            client.println("        font-family: -apple-system, system-ui, BlinkMacSystemFont, 'SF Pro',");
-            client.println("          'San Francisco Pro', 'Helvetica Neue', Helvetica, Roboto, sans-serif;");
-            client.println("        color: var(--foreground);");
-            client.println("        background-color: var(--background);");
-            client.println("        display: flex;");
-            client.println("        flex-direction: column;");
-            client.println("        align-items: center;");
-            client.println("        justify-content: center;");
-            client.println("      }");
-            client.println("");
-            client.println("      section {");
-            client.println("        padding-top: 2rem;");
-            client.println("        display: flex;");
-            client.println("        align-items: center;");
-            client.println("        justify-content: center;");
-            client.println("      }");
-            client.println("");
-            client.println("      a {");
-            client.println("        min-width: 4rem;");
-            client.println("        text-decoration: none;");
-            client.println("        text-align: center;");
-            client.println("        padding: 0.5rem 1rem;");
-            client.println("        margin: 0.5rem;");
-            client.println("        border: none;");
-            client.println("        border-radius: 0.25rem;");
-            client.println("        background-color: var(--primary);");
-            client.println("        color: #fff;");
-            client.println("        font-size: 1rem;");
-            client.println("        font-weight: 500;");
-            client.println("        text-transform: uppercase;");
-            client.println("        cursor: pointer;");
-            client.println("        transition: background-color 0.2s, transform 0.2s;");
-            client.println("      }");
-            client.println("");
-            client.println("      a.red {");
-            client.println("        background-color: #f43f5e;");
-            client.println("      }");
-            client.println("");
-            client.println("      a.red:hover {");
-            client.println("        background-color: #e11d48;");
-            client.println("      }");
-            client.println("");
-            client.println("      a.green {");
-            client.println("        background-color: #22c55e;");
-            client.println("      }");
-            client.println("");
-            client.println("      a.green:hover {");
-            client.println("        background-color: #16a34a;");
-            client.println("      }");
-            client.println("");
-            client.println("      a.blue {");
-            client.println("        background-color: #3b82f6;");
-            client.println("      }");
-            client.println("");
-            client.println("      a.blue:hover {");
-            client.println("        background-color: #2563eb;");
-            client.println("      }");
-            client.println("");
-            client.println("      a:active {");
-            client.println("        transform: scale(0.95);");
-            client.println("      }");
-            client.println("");
-            client.println("      a.red.off,");
-            client.println("      a.green.off,");
-            client.println("      a.blue.off {");
-            client.println("        background-color: #64748b;");
-            client.println("      }");
-            client.println("");
-            client.println("      a.red.off:hover,");
-            client.println("      a.green.off:hover,");
-            client.println("      a.blue.off:hover {");
-            client.println("        background-color: #475569;");
-            client.println("      }");
-            client.println("    </style>");
-            client.println("  </head>");
-            client.println("  <body>");
+            client.println("<style>");
+
+            // css - root
+            client.println(":root {");
+            client.println("--foreground: #020617;");
+            client.println("--background: #f8fafc;");
+            client.println("--primary: #8b5cf6;");
+            client.println("}");
+
+            // css - dark mode
+            client.println("@media (prefers-color-scheme: dark) {");
+            client.println(":root {");
+            client.println("--foreground: #f8fafc;");
+            client.println("--background: #020617;");
+            client.println("}");
+            client.println("}");
+
+            // css - all
+            client.println("* {");
+            client.println("margin: 0;");
+            client.println("padding: 0;");
+            client.println("box-sizing: border-box;");
+            client.println("}");
+
+            // css - body
+            client.println("body {");
+            client.println("margin-top: 4rem;");
+            client.println("font-family: -apple-system, system-ui, BlinkMacSystemFont, 'SF Pro',");
+            client.println("  'San Francisco Pro', 'Helvetica Neue', Helvetica, Roboto, sans-serif;");
+            client.println("color: var(--foreground);");
+            client.println("background-color: var(--background);");
+            client.println("display: flex;");
+            client.println("flex-direction: column;");
+            client.println("align-items: center;");
+            client.println("justify-content: center;");
+            client.println("}");
+
+            // css - section
+            client.println("section {");
+            client.println("padding-top: 2rem;");
+            client.println("display: flex;");
+            client.println("align-items: center;");
+            client.println("justify-content: center;");
+            client.println("}");
+
+            // css - a
+            client.println("a {");
+            client.println("min-width: 4rem;");
+            client.println("text-decoration: none;");
+            client.println("text-align: center;");
+            client.println("padding: 0.5rem 1rem;");
+            client.println("margin: 0.5rem;");
+            client.println("border: none;");
+            client.println("border-radius: 0.25rem;");
+            client.println("background-color: var(--primary);");
+            client.println("color: #fff;");
+            client.println("font-size: 1rem;");
+            client.println("font-weight: 500;");
+            client.println("text-transform: uppercase;");
+            client.println("cursor: pointer;");
+            client.println("transition: background-color 0.2s, transform 0.2s;");
+            client.println("}");
+
+            // css - a red
+            client.println("a.red {");
+            client.println("background-color: #f43f5e;");
+            client.println("}");
+            client.println("a.red:hover {");
+            client.println("background-color: #e11d48;");
+            client.println("}");
+
+            // css - a green
+            client.println("a.green {");
+            client.println("background-color: #22c55e;");
+            client.println("}");
+            client.println("a.green:hover {");
+            client.println("background-color: #16a34a;");
+            client.println("}");
+
+            // css - a blue
+            client.println("a.blue {");
+            client.println("background-color: #3b82f6;");
+            client.println("}");
+            client.println("a.blue:hover {");
+            client.println("background-color: #2563eb;");
+            client.println("}");
+            client.println("a:active {");
+            client.println("transform: scale(0.95);");
+            client.println("}");
+
+            // css - a off
+            client.println("a.red.off,");
+            client.println("a.green.off,");
+            client.println("a.blue.off {");
+            client.println("background-color: #64748b;");
+            client.println("}");
+
+            // css - a hover off
+            client.println("a.red.off:hover,");
+            client.println("a.green.off:hover,");
+            client.println("a.blue.off:hover {");
+            client.println("background-color: #475569;");
+            client.println("</style>");
+            client.println("</head>");
+            client.println("<body>");
 
             // HTML Body
-            client.println("    <h1>ESP32 Web Server</h1>"); // title
+            client.println("<h1>ESP32 Web Server</h1>"); // title
 
             // Buttons container
-            client.println("    <section>");
+            client.println("<section>");
 
             // Red Button
             if (redPinState=="on") {
-              client.println("      <a class=\"red\" role=\"button\" aria-label=\"Turn on Red Led\" href=\"/2/off\">" + redPinState + "</a>");
+              client.println("<a class=\"red\" role=\"button\" aria-label=\"Turn on Red Led\" href=\"/2/off\">" + redPinState + "</a>");
             } else {
-              client.println("      <a class=\"red off\" role=\"button\" aria-label=\"Turn on Red Led\" href=\"/2/on\">" + redPinState + "</a>");
+              client.println("<a class=\"red off\" role=\"button\" aria-label=\"Turn on Red Led\" href=\"/2/on\">" + redPinState + "</a>");
             }
 
             // Green Button
             if (greenPinState=="on") {
-              client.println("      <a class=\"green\" role=\"button\" aria-label=\"Turn on Green Led\" href=\"/4/off\">" + greenPinState + "</a>");
+              client.println("<a class=\"green\" role=\"button\" aria-label=\"Turn on Green Led\" href=\"/4/off\">" + greenPinState + "</a>");
             } else {
-              client.println("      <a class=\"green off\" role=\"button\" aria-label=\"Turn on Green Led\" href=\"/4/on\">" + greenPinState + "</a>");
+              client.println("<a class=\"green off\" role=\"button\" aria-label=\"Turn on Green Led\" href=\"/4/on\">" + greenPinState + "</a>");
             }
 
             // Blue Button
             if (bluePinState=="on") {
-              client.println("      <a class=\"blue\" role=\"button\" aria-label=\"Turn on Blue Led\" href=\"/5/off\">" + bluePinState + "</a>");
+              client.println("<a class=\"blue\" role=\"button\" aria-label=\"Turn on Blue Led\" href=\"/5/off\">" + bluePinState + "</a>");
             } else {
-              client.println("      <a class=\"blue off\" role=\"button\" aria-label=\"Turn on Blue Led\" href=\"/5/on\">" + bluePinState + "</a>");
+              client.println("<a class=\"blue off\" role=\"button\" aria-label=\"Turn on Blue Led\" href=\"/5/on\">" + bluePinState + "</a>");
             }
 
-            client.println("    </section>");
+            client.println("</section>");
 
             // Close HTML file
-            client.println("  </body>");
+            client.println("</body>");
             client.println("</html>");
 
             // Close the HTTP response
