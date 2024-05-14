@@ -12,8 +12,13 @@ const rl = readline.createInterface({
   terminal: false,
 })
 
+// Read the file line by line
 rl.on('line', (line) => {
-  console.log(`client.println("${line}");`)
+  // Escape double quotes in the line
+  const escapedLine = line.replace(/"/g, '\\"')
+
+  // Output the escaped line in a format suitable for C++
+  console.log(`client.println("${escapedLine}");`)
 })
 
 rl.on('close', () => console.log('\nFinished reading file'))
