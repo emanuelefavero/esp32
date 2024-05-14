@@ -20,6 +20,12 @@ This is a simple repository to store code for the ESP32 micro controller
 
 <img src="./reference/esp32-dev-kit-c-v2-pin-map.png" alt="GPIO Pin Map" width="900">
 
+## Tips
+
+- To easy convert HTML lines to C++ strings, you can use the `convert-html-to-esp32` Node.js script at the root of this repository. Edit the `index.html` file and run the script with `node convert-html-to-esp32.js` to get the C++ string
+
+> TIP: You need to have Node.js installed on your computer to run the script. You could also run the script with `npx` if you don't want to install Node.js globally or use other tools such as `nodemon` to run the script automatically when the file changes
+
 ## License
 
 - [MIT](LICENSE.md)
