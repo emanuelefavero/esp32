@@ -13,7 +13,7 @@ const rl = readline.createInterface({
 })
 
 rl.on('line', (line) => {
-  console.log(`client.println("${line}")`)
+  console.log(`client.println("${line}");`)
 })
 
 rl.on('close', () => console.log('\nFinished reading file'))
