@@ -59,6 +59,17 @@ void drawChar(void) {
   display.write(0x01);  // Smiley face
   display.write(0x03);  // Heart
 
+  // Draw 'inverse' text (black with white background)
+  display.setTextColor(SSD1306_BLACK, SSD1306_WHITE);
+  // Write line of text (it adds a \n at the end)
+  // It also stores the string literal in PROGREM instead of RAM to save RAM
+  display.println(F(" Hello"));
+
+  // Draw 2X-scale text
+  display.setTextSize(2);
+  display.setTextColor(SSD1306_WHITE);
+  display.print(F("Hello"));
+
   display.display();
   delay(2000);
 }
