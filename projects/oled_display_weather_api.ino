@@ -97,7 +97,9 @@ void loop() {
 
       // CITY NAME
       display.setTextSize(1);
-      display.println(" " + response["name"]);
+      const char* cityName = response["name"];
+      display.print(" ");
+      display.print(cityName);
 
       display.display();
     }
