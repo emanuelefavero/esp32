@@ -95,12 +95,25 @@ void loop() {
       int temperatureInt = round(temperature);
       display.print(String(temperatureInt) + "C");
 
-      // CITY NAME
+      // CITY NAME (same line as temperature)
       display.setTextSize(1);
       const char* cityName = response["name"];
       display.print(" ");
       display.print(cityName);
 
+      // Move to the next line for Wind text
+      int textSize = 2;
+      int baseFontHeight = 8; // Base height of the font in pixels
+      int textHeight = textSize * baseFontHeight;
+      display.setCursor(0, textHeight); // Position cursor to next line based on the 2x text height
+
+      // WIND
+      display.setTextSize(1); // Ensure text size is set to normal
+      display.print("Wind: ");
+      display.print(int(round(double(response["wind"]["speed"]) * 3.6)));
+      display.print(" km/h");
+
+      // Display everything
       display.display();
     }
     else {
