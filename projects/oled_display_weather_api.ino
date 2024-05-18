@@ -19,12 +19,12 @@ SDA -> G21
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-const char* ssid = "VODA_FWA";
-const char* password = "sillyunit848";
+const char* ssid = "YOUR_SSID";
+const char* password = "YOUR_PASSWORD";
 
 // OpenWeatherMap API Key
-String apiKey = "f83d3ee16f9324aa299e3e8f6d2db5e1";
-String cityId = "Collesalvetti";
+String apiKey = "YOUR_API_KEY";
+String cityId = "Pisa";
 String countryCode = "IT";
 
 String serverName = "http://api.openweathermap.org/data/2.5/weather?q=" + String(cityId) + "," + String(countryCode) + "&units=metric&APPID=" + String(apiKey);
