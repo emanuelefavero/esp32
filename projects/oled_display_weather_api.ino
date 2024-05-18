@@ -120,7 +120,10 @@ void loop() {
 
       // WEATHER DESCRIPTION
       const char* weatherDescription = response["weather"][0]["description"];
-      display.println(weatherDescription);
+      char capitalizedDescription[strlen(weatherDescription) + 1];
+      strcpy(capitalizedDescription, weatherDescription);
+      capitalizedDescription[0] = toupper(capitalizedDescription[0]);
+      display.println(capitalizedDescription);
 
       // Display everything
       display.display();
