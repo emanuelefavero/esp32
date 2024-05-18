@@ -88,14 +88,20 @@ void loop() {
         return;
       }
 
-      float temperature = double(response["main"]["temp"]);
-      String tempString = String(temperature, 1) + " C";
-
-      // * Display the temperature on the OLED
+      // * Display data
       display.clearDisplay();
-      display.setTextSize(1);
+      display.setTextSize(2);
       display.setCursor(0, 0);
-      display.println(tempString);
+
+      // TEMPERATURE
+      float temperature = double(response["main"]["temp"]);
+      int temperatureInt = round(temperature);
+      display.print(String(temperatureInt) + "C");
+
+      // CITY NAME
+      display.setTextSize(1);
+      display.println(" " + response["name"]);
+
       display.display();
     }
     else {
