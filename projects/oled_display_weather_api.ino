@@ -19,19 +19,16 @@ SDA -> G21
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-// * Set your SSID and Password
-const char* ssid = "YOUR_SSID";
-const char* password = "YOUR_PASSWORD";
+const char* ssid = "VODA_FWA";
+const char* password = "sillyunit848";
 
 // OpenWeatherMap API Key
-// * Get your API Key from https://home.openweathermap.org/users/sign_up
-String apiKey = "YOUR_API_KEY";
-String cityId = "PISA";
+String apiKey = "f83d3ee16f9324aa299e3e8f6d2db5e1";
+String cityId = "Collesalvetti";
 String countryCode = "IT";
 
 String serverName = "http://api.openweathermap.org/data/2.5/weather?q=" + String(cityId) + "," + String(countryCode) + "&units=metric&APPID=" + String(apiKey);
 
-// * Set the OLED display width and height in pixels
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
 
@@ -62,7 +59,7 @@ void setup() {
   display.setCursor(0, 0);
   display.display();
   
-  // * Initial display message
+  // Initial display message
   display.println("Fetching");
   display.println("weather...");
   display.display();
@@ -88,14 +85,16 @@ void loop() {
         return;
       }
 
-      float temperature = double(response["main"]["temp"]);
-      String tempString = String(temperature, 1) + " C";
-
-      // * Display the temperature on the OLED
+      // Display data
       display.clearDisplay();
       display.setTextSize(1);
       display.setCursor(0, 0);
-      display.println(tempString);
+
+      // TEMPERATURE
+      float temperature = double(response["main"]["temp"]);
+      int temperatureInt = round(temperature);
+      display.println(String(temperatureInt) + "C");
+
       display.display();
     }
     else {
