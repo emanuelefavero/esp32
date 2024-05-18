@@ -118,6 +118,10 @@ void loop() {
       display.print(response["main"]["humidity"]);
       display.println("%");
 
+      // WEATHER DESCRIPTION
+      const char* weatherDescription = response["weather"][0]["description"];
+      display.println(weatherDescription);
+
       // Display everything
       display.display();
     }
