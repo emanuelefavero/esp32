@@ -113,6 +113,11 @@ void loop() {
       display.print(int(round(double(response["wind"]["speed"]) * 3.6)));
       display.print(" km/h");
 
+      // HUMIDITY
+      display.print("H: ");
+      display.print(response["main"]["humidity"]);
+      display.println("%");
+
       // Display everything
       display.display();
     }
