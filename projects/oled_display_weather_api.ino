@@ -36,6 +36,15 @@ String serverName = "http://api.openweathermap.org/data/2.5/weather?q=" + String
 #define OLED_RESET -1
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
+// DEFINE BITMAP IMAGES
+const unsigned char PROGMEM bitmapHumidity[] = {
+	0x00, 0x18, 0x18, 0x3c, 0x7e, 0x7e, 0x3c, 0x18
+}; // 8x8 humidity
+
+const unsigned char PROGMEM bitmapWind[] = {
+	0x18, 0x73, 0xc6, 0x1c, 0x70, 0xc3, 0x0e, 0x18
+}; // 8x8 wind
+
 void setup() {
   // Start the Serial Monitor
   Serial.begin(115200);
@@ -53,6 +62,7 @@ void setup() {
     Serial.println(F("SSD1306 allocation failed"));
     for(;;);
   }
+
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
@@ -66,7 +76,7 @@ void setup() {
 }
 
 void loop() {
-  // Perform the HTTP request every 10 minutes
+  // Perform the HTTP request
   if ((WiFi.status() == WL_CONNECTED)) {
     HTTPClient http;
 
@@ -85,9 +95,10 @@ void loop() {
         return;
       }
 
-      // * Display data
+      // Display data
       display.clearDisplay();
       display.setTextSize(2);
+      display.setTextColor(SSD1306_WHITE);
       display.setCursor(0, 0);
 
       // TEMPERATURE
@@ -108,22 +119,26 @@ void loop() {
       display.setCursor(0, textHeight); // Position cursor to next line based on the 2x text height
 
       // WIND
-      display.setTextSize(1); // Ensure text size is set to normal
-      display.print("Wind: ");
+      textSize = 1; // // Ensure text size is set to normal
+      display.setTextSize(textSize);
+      drawBitmap(bitmapWind, 8, 8);
+      display.print(" ");
       display.print(int(round(double(response["wind"]["speed"]) * 3.6)));
       display.print(" km/h");
+      display.print(" ");
 
       // HUMIDITY
-      display.print("H: ");
+      drawBitmap(bitmapHumidity, 8, 8);
+      display.print(" ");
       display.print(response["main"]["humidity"]);
       display.println("%");
 
       // WEATHER DESCRIPTION
       const char* weatherDescription = response["weather"][0]["description"];
-      char capitalizedDescription[strlen(weatherDescription) + 1];
-      strcpy(capitalizedDescription, weatherDescription);
-      capitalizedDescription[0] = toupper(capitalizedDescription[0]);
-      display.println(capitalizedDescription);
+      char capitalizedDescription[strlen(weatherDescription) + 1]; // Create a new array to store the modified string
+      strcpy(capitalizedDescription, weatherDescription); // Copy the original string to the new array
+      capitalizedDescription[0] = toupper(capitalizedDescription[0]); // Capitalize the first letter
+      display.println(capitalizedDescription); // Print the modified weather description
 
       // Display everything
       display.display();
@@ -140,8 +155,21 @@ void loop() {
   }
 
   // Delay for 10 seconds
-  delay(10000);
+  // delay(10000);
 
   // Delay for 10 minutes
-  // delay(600000);
+  delay(600000);
+}
+
+void drawBitmap(const uint8_t *bitmap, uint8_t width, uint8_t height) {
+  // Save current cursor position
+  int16_t cursorX = display.getCursorX();
+  int16_t cursorY = display.getCursorY();
+
+  // Draw bitmap slightly higher to align with text
+  int16_t adjustedY = cursorY - 1; // Adjust this value as needed for better alignment
+  display.drawBitmap(cursorX, adjustedY, bitmap, width, height, SSD1306_WHITE);
+
+  // Move cursor position to the right of the bitmap
+  display.setCursor(cursorX + width, cursorY);
 }
