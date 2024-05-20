@@ -45,6 +45,36 @@ const unsigned char PROGMEM bitmapWind[] = {
 	0x18, 0x73, 0xc6, 0x1c, 0x70, 0xc3, 0x0e, 0x18
 }; // 8x8 wind
 
+const unsigned char PROGMEM bitmapSun[] = {
+	0x00, 0x00, 0x01, 0x80, 0x09, 0x90, 0x04, 0x20, 0x21, 0x84, 0x13, 0xc8, 0x04, 0x20, 0x6c, 0x36, 
+	0x6c, 0x36, 0x04, 0x20, 0x13, 0xc8, 0x21, 0x84, 0x04, 0x20, 0x09, 0xb0, 0x01, 0x80, 0x00, 0x00
+}; // 16x16 sun
+
+const unsigned char PROGMEM bitmapCloud[] = {
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0f, 0x00, 0x1e, 0x60, 0x38, 0xf6, 0x33, 0xf7, 0x07, 0xf3, 
+  0x1f, 0xf8, 0x3f, 0xfc, 0x1f, 0xf8, 0x0f, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+}; // 16x16 cloud
+
+const unsigned char PROGMEM bitmapThunderstorm[] = {
+	0x03, 0xc0, 0x07, 0xe0, 0x1f, 0xf8, 0x3f, 0xfc, 0x7f, 0xfe, 0xfc, 0x1f, 0xfd, 0x9f, 0xfb, 0xbf,
+  0x73, 0x0e, 0x07, 0xe0, 0x07, 0xe0, 0x01, 0xc0, 0x03, 0x80, 0x03, 0x00, 0x02, 0x00, 0x00, 0x00
+}; // 16x16 thunderstorm
+
+const unsigned char PROGMEM bitmapRain[] = {
+	0x00, 0x04, 0x10, 0x0c, 0x30, 0x0e, 0x38, 0x1e, 0x7c, 0x0c, 0x7c, 0xc0, 0x39, 0xc0, 0x11, 0xe0,
+  0x03, 0xf0, 0x07, 0xf0, 0x07, 0xf8, 0x0f, 0xf8, 0x0f, 0xf8, 0x07, 0xf8, 0x03, 0xf0, 0x01, 0xe0
+}; // 16x16 rain
+
+const unsigned char PROGMEM bitmapSnow[] = {
+	0x00, 0x00, 0x01, 0x80, 0x03, 0xc0, 0x19, 0x98, 0x79, 0x9e, 0x39, 0x9c, 0x3d, 0xbc, 0x03, 0xc0,
+  0x03, 0xc0, 0x3d, 0xbc, 0x39, 0x9c, 0x79, 0x9e, 0x19, 0x98, 0x03, 0xc0, 0x01, 0x80, 0x00, 0x00
+}; // 16x16 snow
+
+const unsigned char PROGMEM bitmapMist[] = {
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x7f, 0xc0, 0x00, 0x00, 0x0f, 0xff, 0x00, 0x00, 0x3f, 0xf8,
+  0x3f, 0xf8, 0x00, 0x00, 0x1f, 0xfe, 0x00, 0x00, 0x3f, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+}; // 16x16 mist
+
 void setup() {
   // Start the Serial Monitor
   Serial.begin(115200);
@@ -124,16 +154,41 @@ void loop() {
       drawBitmap(bitmapWind, 8, 8);
       display.print(" ");
       display.print(int(round(double(response["wind"]["speed"]) * 3.6)));
-      display.print(" km/h");
+      display.print("km/h");
       display.print(" ");
 
       // HUMIDITY
       drawBitmap(bitmapHumidity, 8, 8);
       display.print(" ");
       display.print(response["main"]["humidity"]);
-      display.println("%");
+      display.print("%");
+
+      display.print("   ");
+
+      // WEATHER ICON
+      const char* weatherMain = response["weather"][0]["main"];
+
+      // Display a different bitmap image depending on weather description
+      if (strcmp(weatherMain, "Clear") == 0) {
+        drawBitmap(bitmapSun, 16, 16);
+      } else if (strcmp(weatherMain, "Clouds") == 0) {
+        drawBitmap(bitmapCloud, 16, 16);
+      } else if (strcmp(weatherMain, "Thunderstorm") == 0) {
+        drawBitmap(bitmapThunderstorm, 16, 16);
+      } else if (strcmp(weatherMain, "Drizzle") == 0) {
+        drawBitmap(bitmapRain, 16, 16);
+      } else if (strcmp(weatherMain, "Rain") == 0) {
+        drawBitmap(bitmapRain, 16, 16);
+      } else if (strcmp(weatherMain, "Snow") == 0) {
+        drawBitmap(bitmapSnow, 16, 16);
+      } else if (strcmp(weatherMain, "Atmosphere") == 0) {
+        drawBitmap(bitmapMist, 16, 16);
+      }
+      
+      display.println(""); // go to next line
 
       // WEATHER DESCRIPTION
+      // Capitalize and display weather description
       const char* weatherDescription = response["weather"][0]["description"];
       char capitalizedDescription[strlen(weatherDescription) + 1]; // Create a new array to store the modified string
       strcpy(capitalizedDescription, weatherDescription); // Copy the original string to the new array
@@ -167,7 +222,7 @@ void drawBitmap(const uint8_t *bitmap, uint8_t width, uint8_t height) {
   int16_t cursorY = display.getCursorY();
 
   // Draw bitmap slightly higher to align with text
-  int16_t adjustedY = cursorY - 1; // Adjust this value as needed for better alignment
+  int16_t adjustedY = cursorY - 1; // Adjust for better Y alignment
   display.drawBitmap(cursorX, adjustedY, bitmap, width, height, SSD1306_WHITE);
 
   // Move cursor position to the right of the bitmap
