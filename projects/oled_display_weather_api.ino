@@ -13,6 +13,7 @@ SDA -> G21
 #include <WiFi.h>
 #include <HTTPClient.h>
 #include <Arduino_JSON.h>
+#include <moonPhase.h>
 
 #include <SPI.h>
 #include <Wire.h>
@@ -28,6 +29,9 @@ String cityId = "Pisa";
 String countryCode = "IT";
 
 String serverName = "http://api.openweathermap.org/data/2.5/weather?q=" + String(cityId) + "," + String(countryCode) + "&units=metric&APPID=" + String(apiKey);
+
+moonPhase moonPhase; // include a MoonPhase instance
+struct tm timeinfo = {0}; // setup time
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
@@ -86,6 +90,13 @@ void setup() {
     Serial.println("Connecting to WiFi...");
   }
   Serial.println("Connected to WiFi");
+
+  // Get Time through WiFi
+  Serial.println("Connected. Getting time...");
+  configTzTime( "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00", "0.pool.ntp.org" ); // Timezone: Rome, Italy
+  while (!getLocalTime( &timeinfo, 0)) {
+    vTaskDelay( 10 / portTICK_PERIOD_MS );
+  }
   
   // Initialize the OLED display
   if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
@@ -137,10 +148,52 @@ void loop() {
       display.print(String(temperatureInt) + "C");
 
       // CITY NAME (same line as temperature)
+      // const char* cityName = response["name"];
+      // display.print(cityName);
+
+      // MOON PHASE
       display.setTextSize(1);
-      const char* cityName = response["name"];
       display.print(" ");
-      display.print(cityName);
+      getLocalTime(&timeinfo); // get local time through WiFi
+      Serial.print("Time: ");
+      Serial.print(asctime(&timeinfo));
+
+      // Moon phase (angle 0-360)
+      moonData_t moon = moonPhase.getPhase(); // get moon phase
+      int moonAngle = moon.angle; // get phase 0-360
+      // display.print(moon.angle); // get phase
+
+      // Determine the moon phase based on the moon angle
+      if (moonAngle >= 360 && moonAngle < 45) {
+          // New Moon
+          display.print("NM");
+      } else if (moonAngle >= 45 && moonAngle < 90) {
+          // Waxing Crescent
+          display.print("WxC");
+      } else if (moonAngle >= 90 && moonAngle < 135) {
+          // First Quarter
+          display.print("FQ");
+      } else if (moonAngle >= 135 && moonAngle < 180) {
+          // Waxing Gibbous
+          display.print("WxG");
+      } else if (moonAngle >= 180 && moonAngle < 225) {
+          // Full Moon
+          display.print("Full");
+      } else if (moonAngle >= 225 && moonAngle < 270) {
+          // Waning Gibbous
+          display.print("WnG");
+      } else if (moonAngle >= 270 && moonAngle < 315) {
+          // Third Quarter
+          display.print("TQ");
+      } else if (moonAngle >= 315 && moonAngle < 360) {
+          // Waning Crescent
+          display.print("WnC");
+      }
+
+      // Moon percentage lit
+      display.print(" ");
+      display.print(int(round(double(moon.percentLit * 100))));
+      display.println("%");
 
       // Move to the next line for Wind text
       int textSize = 2;
