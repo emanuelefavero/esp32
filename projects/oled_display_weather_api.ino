@@ -41,6 +41,40 @@ struct tm timeinfo = {0}; // setup time
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 // DEFINE BITMAP IMAGES
+// Moon
+const unsigned char PROGMEM bitmapMoonFirstQuarter[] = {
+  0x00, 0x08, 0x0c, 0x0e, 0x0e, 0x0e, 0x0c, 0x08
+}; // 8x8 moon first quarter
+
+const unsigned char PROGMEM bitmapMoonFull[] = {
+  0x00, 0x38, 0x7c, 0xfe, 0xfe, 0xfe, 0x7c, 0x38
+}; // 8x8 moon full
+
+const unsigned char PROGMEM bitmapMoonNew[] = {
+  0x00, 0x38, 0x44, 0x82, 0x82, 0x82, 0x44, 0x38
+}; // 8x8 moon new
+
+const unsigned char PROGMEM bitmapMoonThirdQuarter[] = {
+  0x00, 0x20, 0x60, 0xe0, 0xe0, 0xe0, 0x60, 0x20
+}; // 8x8 moon third quarter
+
+const unsigned char PROGMEM bitmapMoonWaningCrescent[] = {
+  0x00, 0x00, 0x40, 0xc0, 0xc0, 0xe0, 0x7c, 0x38
+}; // 8x8 moon waning crescent
+
+const unsigned char PROGMEM bitmapMoonWaningGibbous[] = {
+  0x00, 0x38, 0x7c, 0xf8, 0xf8, 0xf0, 0x40, 0x00
+}; // 8x8 moon waning gibbous
+
+const unsigned char PROGMEM bitmapMoonWaxingCrescent[] = {
+  0x00, 0x00, 0x04, 0x06, 0x06, 0x0e, 0x7c, 0x38
+}; // 8x8 moon waxing crescent
+
+const unsigned char PROGMEM bitmapMoonWaxingGibbous[] = {
+  0x00, 0x18, 0x3c, 0x3e, 0x3e, 0x3e, 0x3c, 0x18
+}; // 8x8 moon waxing gibbous
+
+// Weather
 const unsigned char PROGMEM bitmapHumidity[] = {
 	0x00, 0x18, 0x18, 0x3c, 0x7e, 0x7e, 0x3c, 0x18
 }; // 8x8 humidity
@@ -153,7 +187,6 @@ void loop() {
 
       // MOON PHASE
       display.setTextSize(1);
-      display.print(" ");
       getLocalTime(&timeinfo); // get local time through WiFi
       Serial.print("Time: ");
       Serial.print(asctime(&timeinfo));
@@ -161,39 +194,39 @@ void loop() {
       // Moon phase (angle 0-360)
       moonData_t moon = moonPhase.getPhase(); // get moon phase
       int moonAngle = moon.angle; // get phase 0-360
-      // display.print(moon.angle); // get phase
-
-      // Determine the moon phase based on the moon angle
-      if (moonAngle >= 360 && moonAngle < 45) {
-          // New Moon
-          display.print("NM");
-      } else if (moonAngle >= 45 && moonAngle < 90) {
-          // Waxing Crescent
-          display.print("WxC");
-      } else if (moonAngle >= 90 && moonAngle < 135) {
-          // First Quarter
-          display.print("FQ");
-      } else if (moonAngle >= 135 && moonAngle < 180) {
-          // Waxing Gibbous
-          display.print("WxG");
-      } else if (moonAngle >= 180 && moonAngle < 225) {
-          // Full Moon
-          display.print("Full");
-      } else if (moonAngle >= 225 && moonAngle < 270) {
-          // Waning Gibbous
-          display.print("WnG");
-      } else if (moonAngle >= 270 && moonAngle < 315) {
-          // Third Quarter
-          display.print("TQ");
-      } else if (moonAngle >= 315 && moonAngle < 360) {
-          // Waning Crescent
-          display.print("WnC");
-      }
 
       // Moon percentage lit
       display.print(" ");
       display.print(int(round(double(moon.percentLit * 100))));
-      display.println("%");
+      display.print("%");
+      display.print(" ");
+
+      // Determine the moon phase based on the moon angle
+      if (moonAngle >= 360 && moonAngle < 45) {
+          display.print("NM ");
+          drawBitmap(bitmapMoonNew, 8, 8); // new moon
+      } else if (moonAngle >= 45 && moonAngle < 90) {
+          display.print("WxC ");
+          drawBitmap(bitmapMoonWaxingCrescent, 8, 8); // waxing crescent
+      } else if (moonAngle >= 90 && moonAngle < 135) {
+          display.print("FQ ");
+          drawBitmap(bitmapMoonFirstQuarter, 8, 8); // first quarter
+      } else if (moonAngle >= 135 && moonAngle < 180) {
+          display.print("WxG ");
+          drawBitmap(bitmapMoonWaxingGibbous, 8, 8); // waxing gibbous
+      } else if (moonAngle >= 180 && moonAngle < 225) {
+          display.print("Full ");
+          drawBitmap(bitmapMoonFull, 8, 8); // full moon
+      } else if (moonAngle >= 225 && moonAngle < 270) {
+          display.print("WnG ");
+          drawBitmap(bitmapMoonWaningGibbous, 8, 8); // waning gibbous
+      } else if (moonAngle >= 270 && moonAngle < 315) {
+          display.print("TQ ");
+          drawBitmap(bitmapMoonThirdQuarter, 8, 8); // third quarter
+      } else if (moonAngle >= 315 && moonAngle < 360) {
+          display.print("WnC ");
+          drawBitmap(bitmapMoonWaningCrescent, 8, 8); // waning crescent
+      }
 
       // Move to the next line for Wind text
       int textSize = 2;
