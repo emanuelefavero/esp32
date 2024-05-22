@@ -172,25 +172,24 @@ void loop() {
 
       // Display data
       display.clearDisplay();
-      display.setTextSize(1);
+      display.setTextSize(2);
       display.setTextColor(SSD1306_WHITE);
       display.setCursor(0, 0);
 
       // TEMPERATURE
-      float tempMin = double(response["main"]["temp_min"]);
-      int tempMinInt = round(tempMin);
-      display.print(String(tempMinInt));
-
-      display.setTextSize(2);
       float temperature = double(response["main"]["temp"]);
       int temperatureInt = round(temperature);
-      display.print(String(temperatureInt) + "C");
-
-      display.setTextSize(1);
+      float tempMin = double(response["main"]["temp_min"]);
+      int tempMinInt = round(tempMin);
       float tempMax = double(response["main"]["temp_max"]);
       int tempMaxInt = round(tempMax);
+
+      display.print(String(temperatureInt) + "C");
+      display.setTextSize(1);
+      display.print(String(tempMinInt));
+      display.print("/");
       display.print(String(tempMaxInt));
-      display.print("  ");
+      display.print("C ");
 
       // CITY NAME (same line as temperature)
       // const char* cityName = response["name"];
