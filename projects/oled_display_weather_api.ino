@@ -190,7 +190,7 @@ void loop() {
       float tempMax = double(response["main"]["temp_max"]);
       int tempMaxInt = round(tempMax);
       display.print(String(tempMaxInt));
-      display.print(" ");
+      display.print("  ");
 
       // CITY NAME (same line as temperature)
       // const char* cityName = response["name"];
@@ -204,48 +204,32 @@ void loop() {
       // Moon phase (angle 0-360)
       moonData_t moon = moonPhase.getPhase(); // get moon phase
       int moonAngle = moon.angle; // get phase 0-360
-      int moonPercentage = round(double(moon.percentLit * 100));
+      // int moonPercentage = round(double(moon.percentLit * 100));
 
       // Determine the moon phase based on the moon angle
       if (moonAngle >= 360 && moonAngle < 45) {
-          display.print("NM");
-          display.print(moonPercentage);
-          display.print("% ");
+          display.print("New ");
           drawBitmap(bitmapMoonNew, 8, 8); // new moon
       } else if (moonAngle >= 45 && moonAngle < 90) {
-          display.print("WxC");
-          display.print(moonPercentage);
-          display.print("% ");
+          display.print("WxC ");
           drawBitmap(bitmapMoonWaxingCrescent, 8, 8); // waxing crescent
       } else if (moonAngle >= 90 && moonAngle < 135) {
-          display.print("FQ");
-          display.print(moonPercentage);
-          display.print("% ");
+          display.print(" FQ ");
           drawBitmap(bitmapMoonFirstQuarter, 8, 8); // first quarter
       } else if (moonAngle >= 135 && moonAngle < 180) {
-          display.print("WxG");
-          display.print(moonPercentage);
-          display.print("% ");
+          display.print("WxG ");
           drawBitmap(bitmapMoonWaxingGibbous, 8, 8); // waxing gibbous
       } else if (moonAngle >= 180 && moonAngle < 225) {
-          display.print("Full");
-          display.print(moonPercentage);
-          display.print("% ");
+          display.print("Full ");
           drawBitmap(bitmapMoonFull, 8, 8); // full moon
       } else if (moonAngle >= 225 && moonAngle < 270) {
-          display.print("WnG");
-          display.print(moonPercentage);
-          display.print("% ");
+          display.print("WnG ");
           drawBitmap(bitmapMoonWaningGibbous, 8, 8); // waning gibbous
       } else if (moonAngle >= 270 && moonAngle < 315) {
-          display.print("TQ");
-          display.print(moonPercentage);
-          display.print("% ");
+          display.print(" TQ ");
           drawBitmap(bitmapMoonThirdQuarter, 8, 8); // third quarter
       } else if (moonAngle >= 315 && moonAngle < 360) {
-          display.print("WnC");
-          display.print(moonPercentage);
-          display.print("% ");
+          display.print("WnC ");
           drawBitmap(bitmapMoonWaningCrescent, 8, 8); // waning crescent
       }
 
