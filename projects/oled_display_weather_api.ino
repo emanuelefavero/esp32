@@ -14,6 +14,7 @@ SDA -> G21
 #include <HTTPClient.h>
 #include <Arduino_JSON.h>
 #include <moonPhase.h>
+#include "time.h"
 
 #include <SPI.h>
 #include <Wire.h>
@@ -87,6 +88,11 @@ const unsigned char PROGMEM bitmapSun[] = {
 	0x00, 0x00, 0x01, 0x80, 0x09, 0x90, 0x04, 0x20, 0x21, 0x84, 0x13, 0xc8, 0x04, 0x20, 0x6c, 0x36, 
 	0x6c, 0x36, 0x04, 0x20, 0x13, 0xc8, 0x21, 0x84, 0x04, 0x20, 0x09, 0xb0, 0x01, 0x80, 0x00, 0x00
 }; // 16x16 sun
+
+const unsigned char PROGMEM bitmapStars[] = {
+	0x00, 0x00, 0x00, 0x40, 0x00, 0x04, 0x20, 0x0e, 0x00, 0x04, 0x02, 0x00, 0x10, 0x00, 0x38, 0x02, 
+  0x10, 0x00, 0x00, 0x80, 0x00, 0x08, 0x00, 0x00, 0x00, 0x20, 0x00, 0x70, 0x04, 0x20, 0x00, 0x00
+}; // 16x16 stars
 
 const unsigned char PROGMEM bitmapCloud[] = {
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0f, 0x00, 0x1e, 0x60, 0x38, 0xf6, 0x33, 0xf7, 0x07, 0xf3, 
@@ -260,7 +266,11 @@ void loop() {
 
       // Display a different bitmap image depending on weather description
       if (strcmp(weatherMain, "Clear") == 0) {
-        drawBitmap(bitmapSun, 16, 16);
+        if (isDaytime(timeinfo)) {
+          drawBitmap(bitmapSun, 16, 16);
+        } else {
+          drawBitmap(bitmapStars, 16, 16);
+        }
       } else if (strcmp(weatherMain, "Clouds") == 0) {
         drawBitmap(bitmapCloud, 16, 16);
       } else if (strcmp(weatherMain, "Thunderstorm") == 0) {
@@ -317,4 +327,17 @@ void drawBitmap(const uint8_t *bitmap, uint8_t width, uint8_t height) {
 
   // Move cursor position to the right of the bitmap
   display.setCursor(cursorX + width, cursorY);
+}
+
+bool isDaytime(struct tm timeinfo) {
+  int currentHour = timeinfo.tm_hour;
+  int sunrise = 7;
+  int sunset = 21;
+
+  // Check if current hour is between sunrise and sunset
+  if (currentHour >= sunrise && currentHour < sunset) {
+    return true;
+  } else {
+    return false;
+  }
 }
