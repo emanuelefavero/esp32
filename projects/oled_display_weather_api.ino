@@ -34,6 +34,12 @@ String serverName = "http://api.openweathermap.org/data/2.5/weather?q=" + String
 moonPhase moonPhase; // include a MoonPhase instance
 struct tm timeinfo = {0}; // setup time
 
+#define DHTPIN 5 // GPIO 5 connected to the DTH temp sensor
+#define DHTTYPE DHT11 // define the type of sensor
+
+// Initialize DHT sensor
+DHT dht(DHTPIN, DHTTYPE);
+
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 32 // OLED display height, in pixels
 
@@ -122,6 +128,8 @@ const unsigned char PROGMEM bitmapMist[] = {
 void setup() {
   // Start the Serial Monitor
   Serial.begin(115200);
+
+  dht.begin(); // Initialize the DHT sensor
   
   // Connect to Wi-Fi
   WiFi.begin(ssid, password);
@@ -185,17 +193,19 @@ void loop() {
       // TEMPERATURE
       float temperature = double(response["main"]["temp"]);
       int temperatureInt = round(temperature);
-      float tempMin = double(response["main"]["temp_min"]);
-      int tempMinInt = round(tempMin);
-      float tempMax = double(response["main"]["temp_max"]);
-      int tempMaxInt = round(tempMax);
+      float localTemperature = double(dht.readTemperature());
+      localTemperature -= 0.2; // Subtract 0.2 to take into account nearby hot components
+      int localTemperatureInt = round(localTemperature);
+      float localHumidity = double(dht.readHumidity());
+      int localHumidityInt = round(localHumidity);
 
       display.print(String(temperatureInt) + "C");
       display.setTextSize(1);
-      display.print(String(tempMinInt));
-      display.print("/");
-      display.print(String(tempMaxInt));
-      display.print("C ");
+      display.print(String(localTemperatureInt));
+      display.print("C");
+      display.print(String(localHumidityInt));
+      display.print("% ");
+
 
       // CITY NAME (same line as temperature)
       // const char* cityName = response["name"];
