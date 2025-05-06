@@ -98,7 +98,7 @@ void setup(void) {
 }
 //========================================================================
 void loop() {
-  if (gameover || !started) { // !
+  if (gameover || !started) {
     // Start or update inactivity timer
     if (!inactivityTimerRunning) {
       inactivityStartTime = millis();
@@ -120,7 +120,7 @@ void loop() {
           screen[i][j] = 0;
 
       gameover = false;
-      started = true; // !
+      started = true;
       score = 0;
       game_speed = 20;
       lvl = 1;
