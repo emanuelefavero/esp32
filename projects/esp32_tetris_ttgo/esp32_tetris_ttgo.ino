@@ -10,6 +10,7 @@
 #include <SPI.h>
 #include <TFT_eSPI.h>
 #include "tet.h"
+#include "esp_sleep.h"       // For deep sleep
 
 
 TFT_eSPI tft = TFT_eSPI(); 
@@ -56,6 +57,10 @@ int lvl=1;
 int leftButton=0;
 int rightButton=35;
 
+// Inactivity timer
+unsigned long inactivityStartTime = 0;
+bool inactivityTimerRunning = false;
+
 void setup(void) {
    
   pinMode(37,INPUT_PULLUP);
@@ -95,33 +100,57 @@ void setup(void) {
 }
 //========================================================================
 void loop() {
-  if (gameover){ 
-    if(digitalRead(leftButton)==0)
-    {
-      for (int j = 0; j < Height; ++j)
-      for (int i = 0; i < Width; ++i)
-      screen[i][j] = 0;
-      gameover=false;
-      score=0;
-      game_speed=20;
-      lvl=1;
-       PutStartPos();                             // Start Position
-       for (int i = 0; i < 4; ++i) screen[pos.X + 
-      block.square[rot][i].X][pos.Y + block.square[rot][i].Y] = block.color;
-      tft.drawString("SCORE:"+String(score),14,8,1);
-      tft.drawString("LVL:"+String(lvl),88,8,1);
-      Draw();  
-      }
-      return;
+  if (gameover) {
+    // Start or update inactivity timer
+    if (!inactivityTimerRunning) {
+      inactivityStartTime = millis();
+      inactivityTimerRunning = true;
+    } else if (millis() - inactivityStartTime >= 10000) {
+      // 10 seconds of inactivity
+      tft.fillScreen(TFT_BLACK);
+      tft.setCursor(10, 100);
+      tft.setTextColor(TFT_WHITE);
+      tft.setTextSize(2);
+      tft.println("Sleeping...");
+      delay(1000);
+      esp_deep_sleep_start();
     }
 
-    if(gameover==false){
-  Point next_pos;
-  int next_rot = rot;
-  GetNextPosRot(&next_pos, &next_rot);
-  ReviseScreen(next_pos, next_rot);
-  //M5.update();
-  delay(game_speed);    }                                  // SPEED ADJUST
+    if (digitalRead(leftButton) == 0) {
+      for (int j = 0; j < Height; ++j)
+        for (int i = 0; i < Width; ++i)
+          screen[i][j] = 0;
+
+      gameover = false;
+      score = 0;
+      game_speed = 20;
+      lvl = 1;
+
+      PutStartPos();  // Start Position
+      for (int i = 0; i < 4; ++i)
+        screen[pos.X + block.square[rot][i].X][pos.Y + block.square[rot][i].Y] = block.color;
+
+      tft.drawString("SCORE:" + String(score), 14, 8, 1);
+      tft.drawString("LVL:" + String(lvl), 88, 8, 1);
+      Draw();
+
+      // Reset inactivity timer on game start
+      inactivityTimerRunning = false;
+    }
+
+    return;
+  }
+
+  // Reset inactivity timer when game is running
+  inactivityTimerRunning = false;
+
+  if (gameover == false) {
+    Point next_pos;
+    int next_rot = rot;
+    GetNextPosRot(&next_pos, &next_rot);
+    ReviseScreen(next_pos, next_rot);
+    delay(game_speed);  // SPEED ADJUST
+  }
 }
 //========================================================================
 void Draw() {                               // Draw 120x240 in the center
