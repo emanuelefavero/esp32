@@ -99,20 +99,7 @@ void setup(void) {
 //========================================================================
 void loop() {
   if (gameover || !started) {
-    // Start or update inactivity timer
-    if (!inactivityTimerRunning) {
-      inactivityStartTime = millis();
-      inactivityTimerRunning = true;
-    } else if (millis() - inactivityStartTime >= 10000) {
-      // 10 seconds of inactivity
-      tft.fillScreen(TFT_BLACK);
-      tft.setCursor(10, 100);
-      tft.setTextColor(TFT_WHITE);
-      tft.setTextSize(2);
-      tft.println("Sleeping...");
-      delay(1000);
-      esp_deep_sleep_start();
-    }
+    CheckInactivity(); // Check for inactivity to enter sleep mode
 
     if (digitalRead(leftButton) == 0) {
       for (int j = 0; j < Height; ++j)
@@ -294,3 +281,19 @@ void make_block( int n , uint16_t color ){            // Make Block color
   } 
 }
 //========================================================================
+void CheckInactivity() {
+  // Start or update inactivity timer
+  if (!inactivityTimerRunning) {
+    inactivityStartTime = millis();
+    inactivityTimerRunning = true;
+  } else if (millis() - inactivityStartTime >= 10000) {
+    // 10 seconds of inactivity
+    tft.fillScreen(TFT_BLACK);
+    tft.setCursor(31, 116);
+    tft.setTextColor(TFT_WHITE);
+    tft.setTextSize(2);
+    tft.println("Zzz...");
+    delay(1000);
+    esp_deep_sleep_start(); // * Enter deep sleep mode
+  }
+}
