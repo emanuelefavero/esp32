@@ -1,5 +1,3 @@
-
-
 //========================================================================
 // TETRIS with M5STACK : 2018.01.20 Transplant by macsbug
 
@@ -100,7 +98,7 @@ void setup(void) {
 }
 //========================================================================
 void loop() {
-  if (gameover) {
+  if (gameover || !started) { // !
     // Start or update inactivity timer
     if (!inactivityTimerRunning) {
       inactivityStartTime = millis();
@@ -122,6 +120,7 @@ void loop() {
           screen[i][j] = 0;
 
       gameover = false;
+      started = true; // !
       score = 0;
       game_speed = 20;
       lvl = 1;
